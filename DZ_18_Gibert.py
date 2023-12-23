@@ -64,7 +64,6 @@ class Cities:
     1. Формирование сета городов (есть!)
     2. Удаление использованного города из сета
     3. Проверка наличия города в сете
-    4. Формирование сета "Плохих" букв (причем после каждого взаимодействия с коллекцией)
     """
 
 
@@ -79,12 +78,20 @@ class CityGame:
     def check_game_rules(last_city: str, new_city: str) -> bool:
         """
         Метод проверки правил игры.
+        Добавлено исключение "плохих" букв - если последняя буква города "плохая" -
+        происходит проверка по предпоследней букве
         Возвращает True если правила соблюдены, иначе False
         :param last_city: последний названный город
         :param new_city: новый город
         :return:
         """
-        if last_city[-1].lower() == new_city[0].lower():
+        last_letter = None
+        if last_city[-1].lower() == 'ь' or last_city[-1].lower() == 'ы' or last_city[-1].lower() == 'й':
+            last_letter = last_city[-2].lower()
+        else:
+            last_letter = last_city[-1].lower()
+
+        if last_letter == new_city[0].lower():
             return True
         else:
             return False
@@ -160,7 +167,7 @@ class GameManager:
 
 if __name__ == "__main__":
     # Создаем экземпляр класса JsonFile
-    json_file = JsonFile("../data/cities.json")
+    json_file = JsonFile("cities.json")
     # Создаем экземпляр класса Cities
     cities = Cities(json_file.read_data())
     # Создаем экземпляр класса CityGame
